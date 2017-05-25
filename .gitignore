@@ -1,1 +1,5 @@
 /blog_django/settings.py
+/blog_django/__pycache__
+/blog_app/__pycache__
+/blog_app/migrations
+db.sqlite3
