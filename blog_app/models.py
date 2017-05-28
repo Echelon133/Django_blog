@@ -6,6 +6,12 @@ def generate_id():
     return uid[:6]
 
 # Create your models here.
+class SiteDetails(models.Model):
+    headline = models.CharField(max_length=70)
+    description = models.TextField()
+    image = models.ImageField()
+
+
 class Category(models.Model):
     name = models.CharField(max_length=40)
 
