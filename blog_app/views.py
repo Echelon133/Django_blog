@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import Http404
 from django.views.generic import TemplateView
 
+
 from .models import Article
 from .models import Category
 from .models import SiteDetails
@@ -12,7 +13,12 @@ class BaseView(TemplateView):
     # Dict with site info that every other view inherits
     baseview_context = {'headline':site_details.headline,
                         'description':site_details.description,
-                        'bg_image':site_details.image}
+                        'author_nick':site_details.author_nick,
+                        'author_description':site_details.author_description,
+                        'authors_twitter':site_details.authors_twitter,
+                        'authors_facebook':site_details.authors_facebook,
+                        'authors_github':site_details.authors_github,
+                        'authors_youtube':site_details.authors_youtube}
 
 
 class HomepageView(BaseView):
@@ -41,7 +47,6 @@ class ArticleView(BaseView):
             raise Http404
         context['title'] = article_obj.title
         context['last_modified'] = article_obj.last_modified
-        context['author'] = article_obj.author
         context['categories'] = article_obj.category.all()
         context['article_body'] = article_obj.article_body
         return context
