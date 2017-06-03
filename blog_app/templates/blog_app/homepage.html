@@ -1,0 +1,46 @@
+{% extends "blog_app/includes/header.html" %}
+
+{% block title %}
+{{ headline }}
+{% endblock %}
+
+{% block description %}
+{{ description }}
+{% endblock %}
+
+{%  block main_headline %}
+<a href="{% url 'homepage' %}">{{ headline }}</a>
+{% endblock %}
+
+{% block main_description %}
+{{ description }}
+{% endblock %}
+
+{% block container %}
+<section id="left_section">
+                {% for article in articles %}
+                <article class="homepage_article">
+                    <header class="article_header"><h2><a href="{% url 'homepage' %}{{article.article_id}}/{{article.slug}}">{{ article.title }}</a></h2></header>
+                    <aside class="article_details">
+                        <ul class="outer_list">
+                            <li>Last modified: {{article.last_modified}}</li>
+                            <li>Categories:
+                                {% for category in article.category.all %}
+                                <a href="{% url 'homepage' %}category/{{category.name}}" class="category">{{ category.name }}</a>
+                                {% endfor %}
+                            </li>
+                        </ul>
+                    </aside>
+                    <section class="article_body">
+                        {{ article.article_body }}
+                    </section>
+                    
+                </article>
+                {% empty %}
+                    <p>No articles available</p>
+                {% endfor %}
+
+
+            </section>
+            {% include "blog_app/includes/right_section.html" %}
+{% endblock %}
