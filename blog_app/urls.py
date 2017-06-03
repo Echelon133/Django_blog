@@ -9,5 +9,4 @@ urlpatterns = [
     url(r'^category/(?P<category_name>[A-Za-z_ \-0-9+]+)', views.CategoryView.as_view(), name='category'),
     url(r'^(?P<article_id>[A-Za-z0-9]{6})', views.ArticleView.as_view(), name='article'),
     url(r'^', views.HomepageView.as_view(), name='homepage'),
-
 ]
