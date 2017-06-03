@@ -33,7 +33,7 @@ Searching by date
                         </ul>
                     </aside>
                     <section class="article_body">
-                        {{ article.article_body }}
+                        {{ article.article_body|safe|truncatewords_html:50 }}
                     </section>
                     
                 </article>

@@ -1,14 +1,22 @@
 <section id="right_section">
                 <aside>
                 <section id="about">
-                    <header class="name">John Doe</header>
-                    <p class="author_description">I am a tech bloger. Bla bla bla test test</p> 
+                    <header class="name">{{ author_nick }}</header>
+                    <p class="author_description">{{ author_description }}</p> 
                 </section>
                 <ul id="contact">
-                    <li>Twitter:@user123</li>
-                    <li>Facebook:<a href="#">User123</a></li>
-                    <li>Github:<a href="#">User123</a></li>
-                    <li>Youtube:<a href="#">User123</a></li>
+                    {% if authors_twitter %}
+                    <li>Twitter:<a href="{{ authors_twitter }}">Follow me</a></li>
+                    {% endif %}
+                    {% if authors_facebook %}
+                    <li>Facebook:<a href="{{ authors_facebook }}">My facebook profile</a></li>
+                    {% endif %}
+                    {% if authors_github %}
+                    <li>Github:<a href="{{ authors_github }}">My Github</a></li>
+                    {% endif %}
+                    {% if authors_youtube %}
+                    <li>Youtube:<a href="{{ authors_youtube }}">My Youtube</a></li>
+                    {% endif %}
                 </ul>
                 </aside>
 </section>
