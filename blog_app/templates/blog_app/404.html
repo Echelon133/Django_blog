@@ -1,1 +1,24 @@
-<h1>404 Page Not Found. Are you sure you have correct URL?</h1>
+{% extends "blog_app/includes/header.html" %}
+
+{% block title %}
+404
+{% endblock %}
+
+{% block description %}
+Page Not Found
+{% endblock %}
+
+{%  block main_headline %}
+<a href="{% url 'homepage' %}">{{ headline }}</a>
+{% endblock %}
+
+{% block main_description %}
+{{ description }}
+{% endblock %}
+
+{% block container %}
+<section id="error">
+<h1 class="error_number">404</h1>
+<p>Page Not Found</p>
+</section>
+{% endblock %}

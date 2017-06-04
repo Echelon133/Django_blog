@@ -177,6 +177,20 @@
     text-indent: 20px;
 }
 
+#error {
+    margin:0 auto;
+    width:400px;
+    font-family:'Roboto', sans-serif;
+}
+
+#error p {
+    font-size:22px;
+}
+
+.error_number {
+    font-size:25px;
+}
+
 footer {
     margin-top:50px;
     text-align:center;
