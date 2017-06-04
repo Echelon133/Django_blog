@@ -17,6 +17,9 @@ from django.conf.urls import url
 from django.conf.urls import include
 from django.contrib import admin
 
+from blog_app.views import PageNotFoundView
+
+handler404 = PageNotFoundView.as_view()
 
 urlpatterns = [
     url(r'^admin', admin.site.urls),
