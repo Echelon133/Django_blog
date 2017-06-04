@@ -45,10 +45,12 @@ class ArticleView(BaseView):
             article_obj = Article.objects.get(article_id=article_id)
         except Article.DoesNotExist:
             raise Http404
-        context['title'] = article_obj.title
-        context['last_modified'] = article_obj.last_modified
-        context['categories'] = article_obj.category.all()
-        context['article_body'] = article_obj.article_body
+        
+        context.update(
+            {'title':article_obj.title,
+             'last_modified':article_obj.last_modified,
+             'categories':article_obj.category.all(),
+             'article_body':article_obj.article_body})
         return context
 
 
@@ -80,8 +82,9 @@ class SearchByYearView(SearchByBaseView):
         context.update(self.baseview_context)
         
         year = context['year']
-        context['searched_date'] = "{year}".format(year=year)
-        context['articles'] = Article.objects.filter(last_modified__year=year)
+        context.update(
+            {'searched_date':"{year}".format(year=year),
+             'articles':Article.objects.filter(last_modified__year=year)})
         return context
 
 
@@ -92,10 +95,10 @@ class SearchByMonthView(SearchByBaseView):
         
         year = context['year']
         month = context['month']
-
-        context['searched_date'] = "{year}/{month}".format(year=year, month=month)
-        context['articles'] = Article.objects.filter(last_modified__year=year,
-                                                     last_modified__month =month)
+        context.update(
+            {'searched_date':"{year}/{month}".format(year=year, month=month),
+             'articles':Article.objects.filter(last_modified__year=year,
+                                               last_modified__month =month)})
         return context 
 
 
@@ -107,15 +110,20 @@ class SearchByDayView(SearchByBaseView):
         year = context['year']
         month = context['month']
         day = context['day']
-
-        context['searched_date'] = "{year}/{month}/{day}".format(year=year,
-                                                                 month=month,
-                                                                 day=day)
-        context['articles'] = Article.objects.filter(last_modified__year=year,
-                                                     last_modified__month=month,
-                                                     last_modified__day=day)
+        context.update(
+            {'searched_date':"{year}/{month}/{day}".format(year=year,
+                                                           month=month,
+                                                           day=day),
+             'articles':Article.objects.filter(last_modified__year=year,
+                                               last_modified__month=month,
+                                               last_modified__day=day)})
         return context
 
 
 class PageNotFoundView(BaseView):
     template_name = 'blog_app/404.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update(self.baseview_context)
+        return context
