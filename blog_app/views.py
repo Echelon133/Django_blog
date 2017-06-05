@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import Http404
 from django.views.generic import TemplateView
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 from .models import Article
@@ -19,6 +20,16 @@ class BaseView(TemplateView):
                         'authors_facebook':site_details.authors_facebook,
                         'authors_github':site_details.authors_github,
                         'authors_youtube':site_details.authors_youtube}
+    
+    def get_page_context(self, objects, page):
+        paginator = Paginator(objects, 5)
+        try:
+            articles = paginator.page(page)
+        except PageNotAnInteger:
+            articles = paginator.page(1)
+        except EmptyPage:
+            articles = paginator.page(paginator.num_pages)
+        return articles
 
 
 class HomepageView(BaseView):
@@ -27,8 +38,9 @@ class HomepageView(BaseView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update(self.baseview_context)
-        
-        articles = Article.objects.all()
+        page = self.request.GET.get('page')
+        all_articles = Article.objects.all()[::-1]
+        articles = self.get_page_context(all_articles, page)
         context['articles'] = articles
         return context
 
@@ -56,7 +68,7 @@ class ArticleView(BaseView):
 
 class CategoryView(BaseView):
     template_name = 'blog_app/category.html'
-
+        
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update(self.baseview_context)
@@ -68,8 +80,11 @@ class CategoryView(BaseView):
             # return context without 'articles' var, so appropriate message can be displayed
             return context
         else:
-            context['articles'] = Article.objects.filter(category=category_obj)
-        return context
+             page = self.request.GET.get('page')
+             filtered_articles = Article.objects.filter(category=category_obj)[::-1]
+             articles = self.get_page_context(filtered_articles, page)
+             context['articles'] = articles
+             return context
 
 
 class SearchByBaseView(BaseView):
@@ -82,9 +97,12 @@ class SearchByYearView(SearchByBaseView):
         context.update(self.baseview_context)
         
         year = context['year']
+        page = self.request.GET.get('page')
+        filtered_articles = Article.objects.filter(last_modified__year=year)
+        articles = self.get_page_context(filtered_articles, page)
         context.update(
             {'searched_date':"{year}".format(year=year),
-             'articles':Article.objects.filter(last_modified__year=year)})
+             'articles': articles})
         return context
 
 
@@ -95,10 +113,13 @@ class SearchByMonthView(SearchByBaseView):
         
         year = context['year']
         month = context['month']
+        page = self.request.GET.get('page')
+        filtered_articles = Article.objects.filter(last_modified__year=year,
+                                                   last_modified__month =month)
+        articles = self.get_page_context(filtered_articles, page)
         context.update(
             {'searched_date':"{year}/{month}".format(year=year, month=month),
-             'articles':Article.objects.filter(last_modified__year=year,
-                                               last_modified__month =month)})
+             'articles': articles})
         return context 
 
 
@@ -110,13 +131,16 @@ class SearchByDayView(SearchByBaseView):
         year = context['year']
         month = context['month']
         day = context['day']
+        page = self.request.GET.get('page')
+        filtered_articles = Article.objects.filter(last_modified__year=year,
+                                                   last_modified__month=month,
+                                                   last_modified__day=day)
+        articles = self.get_page_context(filtered_articles, page)
         context.update(
             {'searched_date':"{year}/{month}/{day}".format(year=year,
                                                            month=month,
                                                            day=day),
-             'articles':Article.objects.filter(last_modified__year=year,
-                                               last_modified__month=month,
-                                               last_modified__day=day)})
+             'articles': articles})
         return context
 
 
