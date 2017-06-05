@@ -40,7 +40,7 @@ Searching by date
                 {% empty %}
                     <h2 class="results">No results when searching by specified date.</h2>
                 {% endfor %}
-
+                {% include "blog_app/includes/pagination.html" %}
 
             </section>
             {% include "blog_app/includes/right_section.html" %}

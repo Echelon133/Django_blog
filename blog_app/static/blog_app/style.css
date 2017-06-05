@@ -191,8 +191,34 @@
     font-size:25px;
 }
 
+.pagination {
+    width:200px;
+    margin:0 auto;
+    margin-bottom:50px;
+    text-align:center;
+    font-family: 'Rubik', sans-serif;
+}
+
+.pagination a {
+    text-decoration: none;
+    color:black;
+}
+
+.pagination a:hover {
+    text-decoration: underline;
+}
+
+.pagination a:visited {
+    color:black;
+}
+
+.current {
+    color:grey;
+}
+
 footer {
     margin-top:50px;
     text-align:center;
     font-family: 'Rubik', sans-serif;
+    clear:both;
 }
