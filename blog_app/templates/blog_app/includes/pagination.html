@@ -1,3 +1,4 @@
+{% if articles %}
 <nav class="pagination">
             <span class="step-links">
                 {% if articles.has_previous %}
@@ -13,3 +14,4 @@
                 {% endif %}
             </span>
 </nav>
+{% endif %}
