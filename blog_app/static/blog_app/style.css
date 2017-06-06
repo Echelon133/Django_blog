@@ -181,6 +181,8 @@
     margin:0 auto;
     width:400px;
     font-family:'Roboto', sans-serif;
+    text-align: center;
+    margin-top:40px;
 }
 
 #error p {
