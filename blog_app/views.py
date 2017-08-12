@@ -6,20 +6,9 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from .models import Article
 from .models import Category
-from .models import SiteDetails
 
 
 class BaseView(TemplateView):
-    site_details = SiteDetails.objects.get(pk=1)
-    # Dict with site info that every other view inherits
-    baseview_context = {'headline':site_details.headline,
-                        'description':site_details.description,
-                        'author_nick':site_details.author_nick,
-                        'author_description':site_details.author_description,
-                        'authors_twitter':site_details.authors_twitter,
-                        'authors_facebook':site_details.authors_facebook,
-                        'authors_github':site_details.authors_github,
-                        'authors_youtube':site_details.authors_youtube}
     
     def get_page_context(self, objects, page):
         paginator = Paginator(objects, 5)
@@ -37,7 +26,6 @@ class HomepageView(BaseView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context.update(self.baseview_context)
         page = self.request.GET.get('page')
         all_articles = Article.objects.all()[::-1]
         articles = self.get_page_context(all_articles, page)
@@ -50,7 +38,6 @@ class ArticleView(BaseView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context.update(self.baseview_context)
         
         article_id = context['article_id']
         try:
@@ -71,7 +58,6 @@ class CategoryView(BaseView):
         
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context.update(self.baseview_context)
         
         category_name = context['category_name']
         try:
@@ -94,7 +80,6 @@ class SearchByBaseView(BaseView):
 class SearchByYearView(SearchByBaseView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context.update(self.baseview_context)
         
         year = context['year']
         page = self.request.GET.get('page')
@@ -109,7 +94,6 @@ class SearchByYearView(SearchByBaseView):
 class SearchByMonthView(SearchByBaseView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context.update(self.baseview_context)
         
         year = context['year']
         month = context['month']
@@ -126,7 +110,6 @@ class SearchByMonthView(SearchByBaseView):
 class SearchByDayView(SearchByBaseView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context.update(self.baseview_context)
         
         year = context['year']
         month = context['month']
@@ -149,5 +132,4 @@ class PageNotFoundView(BaseView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context.update(self.baseview_context)
         return context
