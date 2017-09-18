@@ -1,6 +1,7 @@
 import uuid
 import re
 from django.db import models
+from django.core.urlresolvers import reverse
 
 
 def generate_id():
@@ -39,3 +40,6 @@ class Article(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('article', args=[self.article_id, self.slug])
