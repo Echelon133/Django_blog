@@ -25,6 +25,9 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return reverse('category', args=[self.name])
+
 
 class Article(models.Model):
     article_id = models.CharField(primary_key=True, 
