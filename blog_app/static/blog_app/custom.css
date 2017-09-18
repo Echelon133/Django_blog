@@ -1,0 +1,25 @@
+#main-header {
+    margin-top:40px;
+}
+
+.outer-list li {
+    list-style-type:none;
+    display:inline;
+}
+
+#single-article {
+    margin-top: 70px;
+}
+
+#single-article section {
+    margin-top:35px;
+}
+
+#contact li {
+    list-style-type:none;
+}
+
+.results {
+    margin-left:20px;
+    margin-bottom:30px;
+}
