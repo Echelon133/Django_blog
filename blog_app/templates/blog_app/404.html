@@ -1,24 +1,18 @@
-{% extends "blog_app/includes/main.html" %}
+{% extends 'blog_app/main.html' %}
 
 {% block title %}
 404
-{% endblock %}
-
-{% block description %}
-Page Not Found
 {% endblock %}
 
 {%  block main_headline %}
 <a href="{% url 'homepage' %}">{{ headline }}</a>
 {% endblock %}
 
-{% block main_description %}
-{{ description }}
-{% endblock %}
-
 {% block container %}
-<section id="error">
-<h1 class="error_number">404</h1>
-<p>Page Not Found</p>
-</section>
+<div class="col"></div>
+<div class="col-md-5">
+    <h1 class="text-center">404</h1>
+    <p class="text-center">Page Not Found</p>
+</div>
+<div class="col"></div>
 {% endblock %}

@@ -1,36 +1,29 @@
-{% extends "blog_app/includes/main.html" %}
+{% extends 'blog_app/main.html' %}
 
 {% block title %}
 {{ title }}
-{% endblock %}
-
-{% block description %}
-{{ description }}
 {% endblock %}
 
 {%  block main_headline %}
 <a href="{% url 'homepage' %}">{{ headline }}</a>
 {% endblock %}
 
-{% block main_description %}
-{{ description }}
-{% endblock %}
-
 {% block container %}
-<article id="single_article">
-                <header id="single_article_header"><h2>{{ title }}</h2></header>
-                    <aside id="single_article_details">
-                        <ul class="outer_list">
-                            <li>Last modified: {{ last_modified }}</li>
-                            <li>Categories:
-                                {% for category in categories %}
-                                <a href="{% url 'homepage' %}category/{{category.name}}" class="category">{{category.name}}</a>
-                                {% endfor %}
-                            </li>
-                        </ul>
-                    </aside>
-                    <section class="article_body">
-                        {{ article_body|safe }}
-                    </section>
-            </article>
+<div class="row">
+    <div class="col"></div>
+    <div class="col-md-10">
+        <article id="single-article">
+            <header><h2 class="text-center">{{ title }}</h2></header>
+                <aside class="text-center">
+                    {% include 'blog_app/includes/categories.html' %}
+                </aside>
+                <section>
+                    {{ article_body|safe }}
+                </section>
+        </article>
+    </div>
+    <div class="col"></div>
+</div>
+
+
 {% endblock %}

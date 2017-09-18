@@ -1,48 +1,13 @@
-{% extends "blog_app/includes/main.html" %}
+{% extends 'blog_app/main.html' %}
 
 {% block title %}
-Searching by category
-{% endblock %}
-
-{% block description %}
-{{ category_name }}
+Searching by {{ category.name }}
 {% endblock %}
 
 {%  block main_headline %}
 <a href="{% url 'homepage' %}">{{ headline }}</a>
 {% endblock %}
 
-{% block main_description %}
-{{ description }}
-{% endblock %}
-
 {% block container %}
-<section id="left_section">
-    <h2 class="results">Results in category {{ category_name }}:</h2>
-                {% for article in articles %}
-                <article class="homepage_article">
-                    <header class="article_header"><h2><a href="{% url 'homepage' %}{{article.article_id}}/{{article.slug}}">{{ article.title }}</a></h2></header>
-                    <aside class="article_details">
-                        <ul class="outer_list">
-                            <li>Last modified: {{article.last_modified}}</li>
-                            <li>Categories:
-                                {% for category in article.category.all %}
-                                <a href="{% url 'homepage' %}category/{{category.name}}" class="category">{{ category.name }}</a>
-                                {% endfor %}
-                            </li>
-                        </ul>
-                    </aside>
-                    <section class="article_body">
-                        {{ article.article_body|safe|truncatewords_html:50 }}
-                    </section>
-                    
-                </article>
-                {% empty %}
-                    <h2 class="results">No articles in this category or category doesn't exist.</h2>
-                {% endfor %}
-
-                {% include "blog_app/includes/pagination.html" %}
-                 
-</section>
-               {% include "blog_app/includes/right_section.html" %}
+    {% include 'blog_app/includes/main_sections.html' with error_text='No articles in category or category doesn\'t exist' %}
 {% endblock %}
