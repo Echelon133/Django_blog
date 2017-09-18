@@ -1,0 +1,20 @@
+<div class="row">
+    <div class="col-md-9">
+        {% for article in articles %}
+            {% include 'blog_app/includes/single_article.html' %}
+        {% empty %}
+            <h3 class="results">{{ error_text }}</p>
+        {% endfor %}
+    </div>
+    <div class="col">
+        {% include 'blog_app/includes/right_section.html' %}
+    </div>
+</div>
+    
+<div class="row">
+    <div class="col"></div>
+    <div class="col-md-4">
+        {% include 'blog_app/includes/pagination.html' %}
+    </div>
+    <div class="col"></div>
+</div> 
