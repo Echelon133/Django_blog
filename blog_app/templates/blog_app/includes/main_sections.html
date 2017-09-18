@@ -5,16 +5,15 @@
         {% empty %}
             <h3 class="results">{{ error_text }}</p>
         {% endfor %}
+        <div class="row">
+            <div class="col"></div>
+            <div class="col-md-3">
+                {% include 'blog_app/includes/pagination.html' %}
+            </div>
+            <div class="col"></div>
+        </div> 
     </div>
     <div class="col">
         {% include 'blog_app/includes/right_section.html' %}
     </div>
 </div>
-    
-<div class="row">
-    <div class="col"></div>
-    <div class="col-md-4">
-        {% include 'blog_app/includes/pagination.html' %}
-    </div>
-    <div class="col"></div>
-</div> 
