@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html>
+    <head>
+        <title>{% block title %}{% endblock %}</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+        <link rel="stylesheet" href="{% static 'blog_app/custom.css' %}">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    </head>
+    <body>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col"></div>
+                <div class="col-md-10">
+                    <header id="main-header">
+                        <h1 class='text-center'><a href="/">Lorem Ipsum</a></h1>
+                        <h5 class='text-center'>Curabitur sagittis nibh eu ex consequat, et pretium mauris tincidunt. Pellentesque consequat mattis varius. Nam efficitu</h4>
+                    </header>
+                    <hr class="my-4">
+                </div>
+                <div class="col"></div>
+            </div>
+            {% block container %}{% endblock %}
+            <hr class="my-5">
+            <div class="row">
+                <div class="col"></div>
+                <div class="col-md-4">
+                    <footer class="text-center">2017 Echelon133</footer>
+                </div>
+                <div class="col"></div>
+            </div>
+        </div>
+    </body>
+</html>
