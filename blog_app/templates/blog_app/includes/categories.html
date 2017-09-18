@@ -2,7 +2,7 @@
     <li>Last modified: {{ last_modified }}</li> | 
     <li>Categories:
         {% for category in categories %}
-        <a href="{% url 'homepage' %}category/{{category.name}}"><span class="badge badge-default badge-pill">{{category.name}}</span></a>
+        <a href="{{ category.get_absolute_url }}"><span class="badge badge-default badge-pill">{{category.name}}</span></a>
         {% endfor %}
     </li>
 </ul>
