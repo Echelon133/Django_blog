@@ -2,6 +2,7 @@ import uuid
 import re
 from django.db import models
 from django.core.urlresolvers import reverse
+from django.contrib.auth.models import User
 
 
 def generate_id():
@@ -46,3 +47,13 @@ class Article(models.Model):
 
     def get_absolute_url(self):
         return reverse('article', args=[self.article_id, self.slug])
+
+
+class Comment(models.Model):
+    author = models.ForeignKey(User, default='')
+    article_commented = models.ForeignKey(Article)
+    date = models.DateTimeField()
+    body = models.TextField(max_length=500)
+
+    def __str__(self):
+        return '{} - {}'.format(self.author, self.body[:20])
