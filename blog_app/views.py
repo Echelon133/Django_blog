@@ -7,10 +7,16 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from .models import Article
 from .models import Category
-from .forms import UserSignupForm
+from .forms import UserSignupForm, UserLoginForm
 
 
 class BaseView(TemplateView):
+    login_form = UserLoginForm()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({'login_form': self.login_form})
+        return context
     
     def get_page_context(self, objects, page):
         paginator = Paginator(objects, 5)
@@ -150,8 +156,24 @@ class SignupView(View):
         form = UserSignupForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/')
+            return render(request, self.template_name)
         else:
             return render(request, self.template_name, {'user_exists': True,
                                                         'form': UserSignupForm()})
-           
+
+
+class LoginView(View):
+    login_form = UserLoginForm
+
+    def get(self, request, *args, **kwargs):
+        return HttpResponseRedirect('/')
+
+    def post(self, request, *args, **kwargs):
+        form = UserLoginForm(request, data=request.POST)
+        if form.is_valid():
+            form.clean()
+            form.login()
+        else:
+            pass
+        return HttpResponseRedirect('/')
+            
