@@ -1,5 +1,6 @@
 from django.views import View
 from django.shortcuts import render
+from django.contrib.auth.views import logout
 from django.views.generic import TemplateView
 from django.template.context_processors import csrf
 from django.http import Http404, HttpResponseRedirect
@@ -175,5 +176,12 @@ class LoginView(View):
             form.login()
         else:
             pass
+        return HttpResponseRedirect('/')
+
+
+class LogoutView(View):
+    
+    def get(self, request, *args, **kwargs):
+        logout(request)
         return HttpResponseRedirect('/')
             
