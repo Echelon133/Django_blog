@@ -7,7 +7,7 @@
                 </li>
             {% else %}
                 {% load widget_tweaks %}
-                <form class="form-inline" method='post' action='/login'>
+                <form class="form-inline" method='post' action="{% url 'login' %}">
                     {% csrf_token %}
                     <label class="sr-only" for="{{ login_form.username.id_for_label }}">Username</label>
                     {% render_field login_form.username class='form-control mb-1 mr-sm-1 mb-sm-0' %}
