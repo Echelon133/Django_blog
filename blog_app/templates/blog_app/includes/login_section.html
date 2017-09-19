@@ -3,7 +3,10 @@
         <ul class="nav justify-content-end">
             {% if user.is_authenticated %}
                 <li class="nav-item">
-                    <p class="nav-link active" href="#">Logged in as {{ user.username }} </a>
+                    <p class="nav-link active">Logged in as {{ user.username }}</p>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'logout' %}">Logout</a>
                 </li>
             {% else %}
                 {% load widget_tweaks %}
