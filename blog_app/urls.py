@@ -10,5 +10,6 @@ urlpatterns = [
     url(r'^(?P<article_id>[A-Za-z0-9]{6})/(?P<slug>[a-zA-z\-]+)', views.ArticleView.as_view(), name='article'),
     url(r'^signup$', views.SignupView.as_view(), name='signup'),
     url(r'^login$', views.LoginView.as_view(), name='login'),
+    url(r'^logout$', views.LogoutView.as_view(), name='logout'),
     url(r'^$', views.HomepageView.as_view(), name='homepage'),
 ]
