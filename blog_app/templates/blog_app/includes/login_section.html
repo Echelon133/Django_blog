@@ -1,0 +1,21 @@
+<div class="row">
+    <div class="col">
+        <ul class="nav justify-content-end">
+            {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <p class="nav-link active" href="#">Logged in as {{ user.username }} </a>
+                </li>
+            {% else %}
+                {% load widget_tweaks %}
+                <form class="form-inline" method='post' action='/login'>
+                    {% csrf_token %}
+                    <label class="sr-only" for="{{ login_form.username.id_for_label }}">Username</label>
+                    {% render_field login_form.username class='form-control mb-1 mr-sm-1 mb-sm-0' %}
+                    <label class="sr-only" for="{{ login_form.password.id_for_label }}">Password</label>
+                    {% render_field login_form.password class='form-control mb-1 mr-sm-1 mb-sm-0' %}
+                    <button type="submit" class="btn">Login</button>
+                </form>
+            {% endif %}
+        </ul>
+    </div>
+</div>
