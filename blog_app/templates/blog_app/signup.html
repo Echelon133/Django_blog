@@ -14,28 +14,40 @@
             {% endif %}
         </div>
     </div>
-      
-    <h2 class="text-center">Sign up</h2>
-    {% load widget_tweaks %}
-    <form method="post">
-        {{ form.non_field_errors }}
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="{{ form.username.id_for_label }}">Username</label>
-            {% render_field form.username class="form-control" %}
+    {% if form %}
+        <h2 class="text-center">Sign up</h2>
+        {% load widget_tweaks %}
+        <form method="post">
+            {{ form.non_field_errors }}
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="{{ form.username.id_for_label }}">Username</label>
+                {% render_field form.username class="form-control" %}
+            </div>
+            <div class="form-group">
+                {{ form.password1.errors }}
+                <label for="{{ form.password1.id_for_label }}">Password</label>
+                {% render_field form.password1 class="form-control" %}
+            </div>
+            <div class="form-group">
+                {{ form.password2.errors }}
+                <label for="{{ form.password2.id_for_label }}">Repeat password</label>
+                {% render_field form.password2 class="form-control" %}
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Sign up</button>
+            </div>
+        </form>
+    {% else %}
+        <div class="row">
+            <div class="col">
+                <div class="alert alert-success" role="alert">
+                    User creation successful. You can log in now.
+                </div>
+            </div>
         </div>
-        <div class="form-group">
-            {{ form.password1.errors }}
-            <label for="{{ form.password1.id_for_label }}">Password</label>
-            {% render_field form.password1 class="form-control" %}
-        </div>
-        <div class="form-group">
-            {{ form.password2.errors }}
-            <label for="{{ form.password2.id_for_label }}">Repeat password</label>
-            {% render_field form.password2 class="form-control" %}
-        </div>
-        <button type="submit" class="btn btn-primary">Sign up</button>
-    </form>
+    {% endif %}
+        
 
 </div>
 <div class="col"></div>
