@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth import login
 
 
 class UserSignupForm(UserCreationForm):
@@ -19,3 +20,15 @@ class UserSignupForm(UserCreationForm):
             # if user with specified username doesn't exist 
             new_user.save()
         return new_user
+
+
+class UserLoginForm(AuthenticationForm):
+    
+    class Meta:
+        model = User
+        fields = ('username', 'password')
+
+    def login(self):
+        request = self.request
+        user = self.user_cache
+        login(request, user)
