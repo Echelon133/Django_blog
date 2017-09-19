@@ -8,10 +8,6 @@
 <a href="{% url 'homepage' %}">{{ headline }}</a>
 {% endblock %}
 
-{% block main_description %}
-{{ description }}
-{% endblock %}
-
 {% block container %}
     {% include 'blog_app/includes/main_sections.html' with error_text='No articles found' %}
 {% endblock %}
