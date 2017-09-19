@@ -1,11 +1,13 @@
+from django.views import View
 from django.shortcuts import render
-from django.http import Http404
 from django.views.generic import TemplateView
+from django.template.context_processors import csrf
+from django.http import Http404, HttpResponseRedirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
 
 from .models import Article
 from .models import Category
+from .forms import UserSignupForm
 
 
 class BaseView(TemplateView):
@@ -133,3 +135,23 @@ class PageNotFoundView(BaseView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
+
+
+class SignupView(View):
+    template_name = 'blog_app/signup.html'
+
+    def get(self, request, *args, **kwargs):
+        form = UserSignupForm()
+        arguments = {'form': form}
+        arguments.update(csrf(request))
+        return render(request, self.template_name, arguments)
+
+    def post(self, request, *args, **kwargs):
+        form = UserSignupForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/')
+        else:
+            return render(request, self.template_name, {'user_exists': True,
+                                                        'form': UserSignupForm()})
+           
