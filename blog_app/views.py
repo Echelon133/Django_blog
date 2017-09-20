@@ -6,10 +6,8 @@ from django.template.context_processors import csrf
 from django.http import Http404, HttpResponseRedirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from .models import Article
-from .models import Category
-from .models import Comment
-from .forms import UserSignupForm, UserLoginForm
+from .models import Article, Category, Comment, User
+from .forms import UserSignupForm, UserLoginForm, CommentForm
 
 
 class BaseView(TemplateView):
@@ -40,31 +38,6 @@ class HomepageView(BaseView):
         all_articles = Article.objects.all()[::-1]
         articles = self.get_page_context(all_articles, page)
         context['articles'] = articles
-        return context
-
-
-class ArticleView(BaseView):
-    template_name = 'blog_app/article.html'
-
-    def get_article_comments(self, article_id):
-        comments = Comment.objects.filter(article_commented__article_id=article_id)
-        return comments
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        article_id = context['article_id']
-        comments = self.get_article_comments(article_id)
-        try:
-            article_obj = Article.objects.get(article_id=article_id)
-        except Article.DoesNotExist:
-            raise Http404
-        
-        context.update(
-            {'title': article_obj.title,
-             'last_modified': article_obj.last_modified,
-             'categories': article_obj.category.all(),
-             'article_body': article_obj.article_body,
-             'comments': comments})
         return context
 
 
@@ -146,6 +119,45 @@ class PageNotFoundView(BaseView):
         return context
 
 
+class ArticleView(View):
+    template_name = 'blog_app/article.html'
+    login_form = UserLoginForm()
+    comment_form = CommentForm()
+
+    def get_article_comments(self, article_id):
+        comments = Comment.objects.filter(article_commented__article_id=article_id)
+        return comments
+
+    def get(self, request, *args, **kwargs):
+        article_id = kwargs['article_id']
+        try:
+            article_obj = Article.objects.get(article_id=article_id)
+        except Article.DoesNotExist:
+            raise 404
+
+        comment_form = CommentForm()
+        comments = self.get_article_comments(article_id)
+        
+        context = {'title': article_obj.title,
+                   'last_modified': article_obj.last_modified,
+                   'categories': article_obj.category.all(),
+                   'article_body': article_obj.article_body,
+                   'comments': comments,
+                   'login_form': self.login_form,
+                   'comment_form': self.comment_form}
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        comment_form = CommentForm(request.POST)
+
+        author = request.user
+        article = Article.objects.get(article_id=kwargs['article_id'])
+        
+        if comment_form.is_valid():
+            comment_form.save(author, article)
+        return HttpResponseRedirect(request.get_full_path())
+
+
 class SignupView(View):
     template_name = 'blog_app/signup.html'
 
@@ -182,4 +194,7 @@ class LogoutView(View):
     
     def get(self, request, *args, **kwargs):
         logout(request)
+        return HttpResponseRedirect('/')
+
+    def post(self, request, *args, **kwargs):
         return HttpResponseRedirect('/')
