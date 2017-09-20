@@ -1,0 +1,28 @@
+<div class="row">
+    <div class="col"></div>
+    <div class="col-md-10 text-center">
+        {% if user.is_authenticated %}
+        Display form here.
+        {% else %}
+        Please log in or sign up to comment.
+        {% endif %}
+        
+        {% if comments %}
+            {% for comment in comments %}
+            <div class="card">
+                <div class="card-header">
+                  {{ comment.author }} -- {{ comment.date }}
+                </div>
+                <div class="card-block">
+                  <blockquote class="card-blockquote">
+                    <p>{{ comment.body }}</p>
+                  </blockquote>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+        <h3>Nobody commented this article yet.</h3>
+        {% endif %}
+    </div>
+    <div class="col"></div>
+</div>
