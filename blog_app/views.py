@@ -47,7 +47,6 @@ class ArticleView(BaseView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        
         article_id = context['article_id']
         try:
             article_obj = Article.objects.get(article_id=article_id)
@@ -55,10 +54,10 @@ class ArticleView(BaseView):
             raise Http404
         
         context.update(
-            {'title':article_obj.title,
-             'last_modified':article_obj.last_modified,
-             'categories':article_obj.category.all(),
-             'article_body':article_obj.article_body})
+            {'title': article_obj.title,
+             'last_modified': article_obj.last_modified,
+             'categories': article_obj.category.all(),
+             'article_body': article_obj.article_body})
         return context
 
 
@@ -67,19 +66,17 @@ class CategoryView(BaseView):
         
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        
         category_name = context['category_name']
         try:
             category_obj = Category.objects.get(name=category_name)
         except Category.DoesNotExist:
-            # return context without 'articles' var, so appropriate message can be displayed
             return context
         else:
-             page = self.request.GET.get('page')
-             filtered_articles = Article.objects.filter(category=category_obj)[::-1]
-             articles = self.get_page_context(filtered_articles, page)
-             context['articles'] = articles
-             return context
+            page = self.request.GET.get('page')
+            filtered_articles = Article.objects.filter(category=category_obj)[::-1]
+            articles = self.get_page_context(filtered_articles, page)
+            context['articles'] = articles
+            return context
 
 
 class SearchByBaseView(BaseView):
@@ -89,13 +86,12 @@ class SearchByBaseView(BaseView):
 class SearchByYearView(SearchByBaseView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        
         year = context['year']
         page = self.request.GET.get('page')
         filtered_articles = Article.objects.filter(last_modified__year=year)
         articles = self.get_page_context(filtered_articles, page)
         context.update(
-            {'searched_date':"{year}".format(year=year),
+            {'searched_date': "{year}".format(year=year),
              'articles': articles})
         return context
 
@@ -103,15 +99,14 @@ class SearchByYearView(SearchByBaseView):
 class SearchByMonthView(SearchByBaseView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        
         year = context['year']
         month = context['month']
         page = self.request.GET.get('page')
         filtered_articles = Article.objects.filter(last_modified__year=year,
-                                                   last_modified__month =month)
+                                                   last_modified__month=month)
         articles = self.get_page_context(filtered_articles, page)
         context.update(
-            {'searched_date':"{year}/{month}".format(year=year, month=month),
+            {'searched_date': "{year}/{month}".format(year=year, month=month),
              'articles': articles})
         return context 
 
@@ -129,9 +124,9 @@ class SearchByDayView(SearchByBaseView):
                                                    last_modified__day=day)
         articles = self.get_page_context(filtered_articles, page)
         context.update(
-            {'searched_date':"{year}/{month}/{day}".format(year=year,
-                                                           month=month,
-                                                           day=day),
+            {'searched_date': "{year}/{month}/{day}".format(year=year,
+                                                            month=month,
+                                                            day=day),
              'articles': articles})
         return context
 
@@ -172,10 +167,7 @@ class LoginView(View):
     def post(self, request, *args, **kwargs):
         form = UserLoginForm(request, data=request.POST)
         if form.is_valid():
-            form.clean()
             form.login()
-        else:
-            pass
         return HttpResponseRedirect('/')
 
 
