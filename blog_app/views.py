@@ -8,6 +8,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from .models import Article
 from .models import Category
+from .models import Comment
 from .forms import UserSignupForm, UserLoginForm
 
 
@@ -45,9 +46,14 @@ class HomepageView(BaseView):
 class ArticleView(BaseView):
     template_name = 'blog_app/article.html'
 
+    def get_article_comments(self, article_id):
+        comments = Comment.objects.filter(article_commented__article_id=article_id)
+        return comments
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         article_id = context['article_id']
+        comments = self.get_article_comments(article_id)
         try:
             article_obj = Article.objects.get(article_id=article_id)
         except Article.DoesNotExist:
@@ -57,7 +63,8 @@ class ArticleView(BaseView):
             {'title': article_obj.title,
              'last_modified': article_obj.last_modified,
              'categories': article_obj.category.all(),
-             'article_body': article_obj.article_body})
+             'article_body': article_obj.article_body,
+             'comments': comments})
         return context
 
 
@@ -176,4 +183,3 @@ class LogoutView(View):
     def get(self, request, *args, **kwargs):
         logout(request)
         return HttpResponseRedirect('/')
-            
