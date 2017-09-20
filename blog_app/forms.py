@@ -29,6 +29,7 @@ class UserLoginForm(AuthenticationForm):
         fields = ('username', 'password')
 
     def login(self):
+        self.clean()
         request = self.request
         user = self.user_cache
         login(request, user)
