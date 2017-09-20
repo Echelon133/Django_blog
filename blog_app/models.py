@@ -52,7 +52,7 @@ class Article(models.Model):
 class Comment(models.Model):
     author = models.ForeignKey(User, default='')
     article_commented = models.ForeignKey(Article)
-    date = models.DateTimeField()
+    date = models.DateTimeField(auto_now_add=True)
     body = models.TextField(max_length=500)
 
     def __str__(self):
