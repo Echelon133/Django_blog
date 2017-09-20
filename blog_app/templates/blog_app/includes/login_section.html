@@ -18,6 +18,9 @@
                     {% render_field login_form.password class='form-control mb-1 mr-sm-1 mb-sm-0' %}
                     <button type="submit" class="btn">Login</button>
                 </form>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'signup' %}">Sign up</a>
+                </li>
             {% endif %}
         </ul>
     </div>
