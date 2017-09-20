@@ -8,6 +8,10 @@
 <a href="{% url 'homepage' %}">{{ headline }}</a>
 {% endblock %}
 
+{% block login %}
+{% include 'blog_app/includes/login_section.html' %}
+{% endblock %}
+
 {% block container %}
     {% include 'blog_app/includes/main_sections.html' with error_text='No articles found' %}
 {% endblock %}

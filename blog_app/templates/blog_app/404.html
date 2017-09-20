@@ -8,6 +8,10 @@
 <a href="{% url 'homepage' %}">{{ headline }}</a>
 {% endblock %}
 
+{% block login %}
+{% include 'blog_app/includes/login_section.html' %}
+{% endblock %}
+
 {% block container %}
 <div class="col"></div>
 <div class="col-md-5">
