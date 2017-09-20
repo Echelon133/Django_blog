@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login
 
+from .models import Comment
+
 
 class UserSignupForm(UserCreationForm):
     username = forms.CharField(required=True)
@@ -33,3 +35,17 @@ class UserLoginForm(AuthenticationForm):
         request = self.request
         user = self.user_cache
         login(request, user)
+
+
+class CommentForm(forms.ModelForm):
+
+    class Meta:
+        model = Comment
+        fields = ['body']
+
+    def save(self, author, article, commit=True):
+        comment = super(CommentForm, self).save(commit=False)
+        comment.author = author
+        comment.article_commented = article
+        comment.save()
+        return comment
