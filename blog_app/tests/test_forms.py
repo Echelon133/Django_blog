@@ -1,5 +1,8 @@
 from django.test import TestCase
+from django.contrib.sessions.backends.db import SessionStore
+from django.test.client import RequestFactory
 from django import forms
+from django.http import QueryDict
 from blog_app.forms import UserLoginForm, UserSignupForm, CommentForm
 from blog_app.models import User, Comment, Article
 
@@ -26,3 +29,18 @@ class CommentFormTest(TestCase):
         comment_form.save(author, article)
         self.assertIn(body, comment_form.cleaned_data.values())
         
+
+class LoginFormTest(TestCase):
+
+    def test_login_with_correct_user(self):
+        user = User.objects.create_user('test_user', '', 'test_password3')
+        request_data = {'password': 'test_password3',
+                        'username': 'test_user'}
+        request_querydict = QueryDict('', mutable=True)
+        request_querydict.update(request_data)
+
+        request = RequestFactory().post('/login', request_querydict)
+        request.session = SessionStore()
+        
+        login_form = UserLoginForm(request, data=request.POST)
+        self.assertTrue(login_form.is_valid())
