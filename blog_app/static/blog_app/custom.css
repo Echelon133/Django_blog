@@ -1,10 +1,9 @@
-#main-header {
-    margin-top:15px;
+nav {
+    margin-top:20px;
 }
 
-.outer-list li {
-    list-style-type:none;
-    display:inline;
+#main-header {
+    margin-top:15px;
 }
 
 #single-article {
@@ -13,6 +12,14 @@
 
 #single-article section {
     margin-top:35px;
+}
+
+#single-article p {
+    text-indent: 10px;
+}
+
+#single-article aside {
+    margin-top:25px;
 }
 
 #right-section {
@@ -29,6 +36,11 @@
     margin-bottom:30px;
 }
 
-nav {
-    margin-top:20px;
+.card-block p {
+    text-indent: 10px;
+}
+
+.outer-list li {
+    list-style-type:none;
+    display:inline;
 }
