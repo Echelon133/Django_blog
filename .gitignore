@@ -2,4 +2,5 @@
 /blog_django/__pycache__
 /blog_app/__pycache__
 /blog_app/migrations
+/blog_app/tests/__pycache__
 db.sqlite3
