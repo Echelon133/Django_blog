@@ -41,6 +41,7 @@ class CategoryModelTest(TestCase):
 
 class ArticleModelTest(TestCase):
     
+    @staticmethod
     def get_new_article(*, title=None, category=None, article_body=None):
         if title is None:
             art_title = ''
@@ -63,66 +64,51 @@ class ArticleModelTest(TestCase):
         new_article.title = art_title
         new_article.category = art_category
         new_article.article_body = art_body
+        new_article.slug = art_slug
         return new_article
     
     def test_create_valid_article(self):
-        article = Article.objects.create()
         category1 = Category.objects.create(name='test-category')
-        
-        article_title = 'My article title'
-        
-        test_article = {'title': article_title,
+        test_article = {'title': 'My article title',
                         'category': [category1, ],
-                        'article_body': 'text' * 200,
-                        'slug': slugify(article_title)}
+                        'article_body': 'text' * 200}
         
-        article.title = test_article['title']
-        article.category = test_article['category']
-        article.article_body = test_article['article_body']
-        article.slug = test_article['slug']
+        article = self.get_new_article(title=test_article['title'],
+                                       category=test_article['category'],
+                                       article_body=test_article['article_body'])
         article.full_clean()
 
         self.assertEqual(article.title, test_article['title'])
         self.assertEqual(article.category.first(), test_article['category'][0])
         self.assertEqual(article.article_body, test_article['article_body'])
-        self.assertEqual(article.slug, test_article['slug'])
+        self.assertEqual(article.slug, slugify(test_article['title']))
         self.assertEqual(article.title, str(article))
 
         url = "/{hash}/{slug}".format(hash=article.article_id, slug=article.slug)
         self.assertEqual(url, article.get_absolute_url())
 
     def test_try_creating_article_without_title(self):
-        article = Article.objects.create()
         category1 = Category.objects.create(name='test-category')
-        
-        article_title = ''
-        test_article = {'title': article_title,
+        test_article = {'title': '',
                         'category': [category1, ],
-                        'article_body': 'text' * 200,
-                        'slug': slugify(article_title)}
+                        'article_body': 'text' * 200}
 
-        article.title = test_article['title']
-        article.category = test_article['category']
-        article.article_body = test_article['article_body']
-        article.slug = test_article['slug']
+        article = self.get_new_article(title=test_article['title'],
+                                       category=test_article['category'],
+                                       article_body=test_article['article_body'])
         
         with self.assertRaises(ValidationError):
             article.full_clean()
 
     def test_try_creating_article_without_body(self):
-        article = Article.objects.create()
         category1 = Category.objects.create(name='test-category')
-        
-        article_title = 'My article title'
-        test_article = {'title': article_title,
+        test_article = {'title': 'My article title',
                         'category': [category1, ],
-                        'article_body': '',
-                        'slug': slugify(article_title)}
+                        'article_body': ''}
 
-        article.title = test_article['title']
-        article.category = test_article['category']
-        article.article_body = test_article['article_body']
-        article.slug = test_article['slug']
+        article = self.get_new_article(title=test_article['title'],
+                                       category=test_article['category'],
+                                       article_body=test_article['article_body'])
         
         with self.assertRaises(ValidationError):
             article.full_clean()
