@@ -47,24 +47,61 @@ class ArticleModelTest(TestCase):
         
         article_title = 'My article title'
         
-        test_article = {'article_id': 'FFFFFF',
-                        'title': article_title,
+        test_article = {'title': article_title,
                         'category': [category1, ],
                         'article_body': 'text' * 200,
                         'slug': slugify(article_title)}
         
-        article.article_id = test_article['article_id'] 
         article.title = test_article['title']
         article.category = test_article['category']
         article.article_body = test_article['article_body']
         article.slug = test_article['slug']
-        article.save()
+        article.full_clean()
 
-        self.assertEqual(article.article_id, test_article['article_id'])
         self.assertEqual(article.title, test_article['title'])
         self.assertEqual(article.category.first(), test_article['category'][0])
         self.assertEqual(article.article_body, test_article['article_body'])
         self.assertEqual(article.slug, test_article['slug'])
+        self.assertEqual(article.title, str(article))
 
+        url = "/{hash}/{slug}".format(hash=article.article_id, slug=article.slug)
+        self.assertEqual(url, article.get_absolute_url())
 
+    def test_try_creating_article_without_title(self):
+        article = Article.objects.create()
+        category1 = Category.objects.create(name='test-category')
+        
+        article_title = ''
+        test_article = {'title': article_title,
+                        'category': [category1, ],
+                        'article_body': 'text' * 200,
+                        'slug': slugify(article_title)}
 
+        article.title = test_article['title']
+        article.category = test_article['category']
+        article.article_body = test_article['article_body']
+        article.slug = test_article['slug']
+        
+        with self.assertRaises(ValidationError):
+            article.full_clean()
+
+    def test_try_creating_article_without_body(self):
+        article = Article.objects.create()
+        category1 = Category.objects.create(name='test-category')
+        
+        article_title = 'My article title'
+        test_article = {'title': article_title,
+                        'category': [category1, ],
+                        'article_body': '',
+                        'slug': slugify(article_title)}
+
+        article.title = test_article['title']
+        article.category = test_article['category']
+        article.article_body = test_article['article_body']
+        article.slug = test_article['slug']
+        
+        with self.assertRaises(ValidationError):
+            article.full_clean()
+
+    def test_try_creating_article_without_category(self):
+        pass
