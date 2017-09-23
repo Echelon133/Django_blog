@@ -148,6 +148,13 @@ class CommentModelTest(TestCase):
         comment1.full_clean()
         comment2.full_clean()
 
+        self.assertEqual(comment1.author, author1)
+        self.assertEqual(comment1.article_commented, article1)
+        self.assertEqual(comment1.body, 'Test')
+        self.assertEqual(comment2.author, author2)
+        self.assertEqual(comment2.article_commented, article1)
+        self.assertEqual(comment2.body, 'Another text')
+
         str_ = '{} - {}'
         self.assertEqual(str(comment1), str_.format(comment1.author, comment1.body[:20]))
         self.assertEqual(str(comment2), str_.format(comment2.author, comment2.body[:20]))
