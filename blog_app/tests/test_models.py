@@ -41,6 +41,30 @@ class CategoryModelTest(TestCase):
 
 class ArticleModelTest(TestCase):
     
+    def get_new_article(*, title=None, category=None, article_body=None):
+        if title is None:
+            art_title = ''
+            art_slug = ''
+        else:
+            art_title = title
+            art_slug = slugify(title)
+        
+        if category is None:
+            art_category = []
+        else:
+            art_category = category
+
+        if article_body is None:
+            art_body = ''
+        else:
+            art_body = article_body
+
+        new_article = Article.objects.create()
+        new_article.title = art_title
+        new_article.category = art_category
+        new_article.article_body = art_body
+        return new_article
+    
     def test_create_valid_article(self):
         article = Article.objects.create()
         category1 = Category.objects.create(name='test-category')
@@ -103,5 +127,3 @@ class ArticleModelTest(TestCase):
         with self.assertRaises(ValidationError):
             article.full_clean()
 
-    def test_try_creating_article_without_category(self):
-        pass
