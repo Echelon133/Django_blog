@@ -38,8 +38,8 @@ class Article(models.Model):
                                   unique=True)
     title = models.CharField(max_length=100)
     last_modified = models.DateField(auto_now=True)
-    category = models.ManyToManyField(Category)
-    article_body = models.TextField()
+    category = models.ManyToManyField(Category, blank=False)
+    article_body = models.TextField(blank=False, null=False)
     slug = models.SlugField()
 
     def __str__(self):
@@ -50,10 +50,10 @@ class Article(models.Model):
 
 
 class Comment(models.Model):
-    author = models.ForeignKey(User, default='')
-    article_commented = models.ForeignKey(Article)
+    author = models.ForeignKey(User, default='', blank=False)
+    article_commented = models.ForeignKey(Article, blank=False, null=False)
     date = models.DateTimeField(auto_now_add=True)
-    body = models.TextField(max_length=500)
+    body = models.TextField(max_length=500, blank=False, null=False)
 
     def __str__(self):
         return '{} - {}'.format(self.author, self.body[:20])
