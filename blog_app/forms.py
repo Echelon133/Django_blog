@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login
+from django.core.exceptions import ValidationError
 
 from .models import Comment
 
@@ -51,4 +52,8 @@ class CommentForm(forms.ModelForm):
             comment.save()
             return comment
         else:
+<<<<<<< HEAD
             raise forms.ValidationError('Empty body of the comment')
+=======
+            raise ValidationError('Cannot add a new comment')
+>>>>>>> new
