@@ -81,3 +81,31 @@ class CategoryTest(TestCase):
 
         res = self.client.get(self.base_url + category1.name)
         self.assertNotIn(article2, res.context['articles'])
+
+    
+class SearchByYearTest(TestCase):
+    base_url = '/{year}/'
+
+    def test_search_year_page_renders_correct_template(self):
+        res = self.client.get(self.base_url.format(year=2017))
+        self.assertTemplateUsed(res, 'blog_app/by_date.html')
+
+    def test_search_year_page_has_correct_form_loaded(self):
+        res = self.client.get(self.base_url.format(year=2017))
+        login_form = res.context['login_form']
+        self.assertIsInstance(login_form, UserLoginForm)
+    
+    def test_search_year_page_loads_correct_articles(self):
+        category1 = Category.objects.create()
+        category1.name = 'category1'
+        category1.save()
+
+        # Year is assigned by default
+        article1 = Article.objects.create()
+        article1.title = 'Test article'
+        article1.category = [category1, ]
+        article1.save()
+
+        current_year = article1.last_modified.year
+        res = self.client.get(self.base_url.format(year=current_year))
+        self.assertIn(article1, res.context['articles'])
