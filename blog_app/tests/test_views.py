@@ -34,7 +34,7 @@ class HomepageTest(TestCase):
         self.assertIn(article2, loaded_articles)
 
 
-class CategoryView(TestCase):
+class CategoryTest(TestCase):
     base_url = '/category/'
 
     def test_category_page_renders_correct_template(self):
