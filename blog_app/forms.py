@@ -22,7 +22,7 @@ class UserSignupForm(UserCreationForm):
             # if user with specified username doesn't exist 
             new_user.save()
         return new_user
-
+        
 
 class UserLoginForm(AuthenticationForm):
     
@@ -33,7 +33,7 @@ class UserLoginForm(AuthenticationForm):
     def login(self):
         self.clean()
         request = self.request
-        user = self.user_cache
+        user = self.get_user()
         login(request, user)
 
 
@@ -44,8 +44,11 @@ class CommentForm(forms.ModelForm):
         fields = ['body']
 
     def save(self, author, article, commit=True):
-        comment = super(CommentForm, self).save(commit=False)
-        comment.author = author
-        comment.article_commented = article
-        comment.save()
-        return comment
+        if self.is_valid():
+            comment = super(CommentForm, self).save(commit=False)
+            comment.author = author
+            comment.article_commented = article
+            comment.save()
+            return comment
+        else:
+            raise forms.ValidationError('Empty body of the comment')
