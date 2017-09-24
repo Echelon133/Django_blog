@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login
+from django.core.exceptions import ValidationError
 
 from .models import Comment
 
@@ -44,8 +45,11 @@ class CommentForm(forms.ModelForm):
         fields = ['body']
 
     def save(self, author, article, commit=True):
-        comment = super(CommentForm, self).save(commit=False)
-        comment.author = author
-        comment.article_commented = article
-        comment.save()
-        return comment
+        if self.is_valid():
+            comment = super(CommentForm, self).save(commit=False)
+            comment.author = author
+            comment.article_commented = article
+            comment.save()
+            return comment
+        else:
+            raise ValidationError('Cannot add a new comment')
