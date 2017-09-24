@@ -17,11 +17,11 @@ def remove_not_safe(text):
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=40)
+    name = models.CharField(max_length=20, blank=False)
 
     def save(self, *args, **kwargs):
         self.name = remove_not_safe(self.name.lower())
-        super().save(*args, **kwargs)
+        super(Category, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.name
@@ -36,11 +36,11 @@ class Article(models.Model):
                                   editable=False,
                                   max_length=6,
                                   unique=True)
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=100, blank=False, null=False)
     last_modified = models.DateField(auto_now=True)
     category = models.ManyToManyField(Category)
-    article_body = models.TextField()
-    slug = models.SlugField()
+    article_body = models.TextField(blank=False)
+    slug = models.SlugField(blank=False)
 
     def __str__(self):
         return self.title
@@ -50,10 +50,10 @@ class Article(models.Model):
 
 
 class Comment(models.Model):
-    author = models.ForeignKey(User, default='')
-    article_commented = models.ForeignKey(Article)
+    author = models.ForeignKey(User, null=False)
+    article_commented = models.ForeignKey(Article, null=False)
     date = models.DateTimeField(auto_now_add=True)
-    body = models.TextField(max_length=500)
+    body = models.TextField(max_length=500, null=False, blank=False)
 
     def __str__(self):
         return '{} - {}'.format(self.author, self.body[:20])
