@@ -94,6 +94,17 @@ class SearchByDateTest(TestCase):
         self.res1 = None
         self.res2 = None
         self.res3 = None
+
+        self.category = Category.objects.create()
+        self.category.name = 'category'
+        self.category.save()
+
+        self.article = Article.objects.create()
+        self.article.title = 'Test article'
+        self.article.category = [self.category, ]
+        self.article.body = 'Test'
+        self.article.slug = 'test-article'
+        self.article.save()
         
     def update_responses(self):
         self.res1 = self.client.get('/{}'.format(self.current_year))
@@ -109,6 +120,17 @@ class SearchByDateTest(TestCase):
         self.assertTemplateUsed(self.res2, 'blog_app/by_date.html')
         self.assertTemplateUsed(self.res3, 'blog_app/by_date.html')
 
+    def test_category_page_has_correct_form_loaded(self):
+        self.update_responses()
+
+        login_form1 = self.res1.context['login_form']
+        login_form2 = self.res2.context['login_form']
+        login_form3 = self.res3.context['login_form']
+
+        self.assertIsInstance(login_form1, UserLoginForm)
+        self.assertIsInstance(login_form2, UserLoginForm)
+        self.assertIsInstance(login_form3, UserLoginForm)
+
     def test_search_date_pages_have_correct_form_loaded(self):
         self.update_responses()
         login_form1 = self.res1.context['login_form']
@@ -120,24 +142,12 @@ class SearchByDateTest(TestCase):
         self.assertIsInstance(login_form3, UserLoginForm)
     
     def test_search_date_pages_load_correct_articles(self):
-        category1 = Category.objects.create()
-        category1.name = 'category1'
-        category1.save()
-
-        # Year is assigned by default
-        article1 = Article.objects.create()
-        article1.title = 'Test article'
-        article1.category = [category1, ]
-        article1.body = 'Test'
-        article1.slug = 'test-article'
-        article1.save()
-
         # Get page after adding new article to the database
         self.update_responses()
 
-        self.assertIn(article1, self.res1.context['articles'])
-        self.assertIn(article1, self.res2.context['articles'])
-        self.assertIn(article1, self.res3.context['articles'])
+        self.assertIn(self.article, self.res1.context['articles'])
+        self.assertIn(self.article, self.res2.context['articles'])
+        self.assertIn(self.article, self.res3.context['articles'])
     
     def test_search_date_page_displays_correct_info_texts(self):
         self.update_responses()
@@ -156,6 +166,58 @@ class PageNotFoundTest(TestCase):
         res = self.client.get('/aaaaaa')
         self.assertTemplateUsed(res, 'blog_app/404.html')
 
-        # 
+
+class ArticleTest(TestCase):
+    base_url = '/{hash_}/{slug}'
     
+    def setUp(self):
+        self.category = Category.objects.create()
+        self.category.name = 'category'
+        self.category.save()
+        
+        self.article = Article.objects.create()
+        self.article.title = 'Test article'
+        self.article.category = [self.category, ]
+        self.article.body = 'Test'
+        self.article.slug = 'test-article'
+        self.article.save()
+
+        self.user = User.objects.create_user('test_user1', '', 'test_password123')
+        self.user.save()
+        
+        self.comment = Comment.objects.create(author=self.user,
+                                              article_commented=self.article,
+                                              body='test')
+        self.comment.save()
+    
+    def test_article_page_renders_correct_template(self):
+        res = self.client.get(self.base_url.format(hash_=self.article.article_id, 
+                                                   slug=self.article.slug))
+        self.assertTemplateUsed(res, 'blog_app/article.html')
+
+    def test_article_page_has_correct_forms_loaded(self):
+        res = self.client.get(self.base_url.format(hash_=self.article.article_id, 
+                                                   slug=self.article.slug))
+        login_form = res.context['login_form']
+        comment_form = res.context['comment_form']
+        self.assertIsInstance(login_form, UserLoginForm)
+        self.assertIsInstance(comment_form, CommentForm)
+
+    def test_article_page_displays_correct_article(self):
+        res = self.client.get(self.base_url.format(hash_=self.article.article_id,
+                                                   slug=self.article.slug))
+        self.assertEqual(res.context['title'], self.article.title)
+        self.assertEqual(res.context['article_body'], self.article.article_body)
+
+    def test_article_page_loads_comment(self):
+        res = self.client.get(self.base_url.format(hash_=self.article.article_id,
+                                                   slug=self.article.slug))
+        self.assertIn(self.comment, res.context['comments'])
+
+
+
+
+
+
+        
 
