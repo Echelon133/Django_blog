@@ -85,13 +85,12 @@ class CategoryTest(TestCase):
 
     
 class SearchByDateTest(TestCase):
+    date_now = datetime.now()
+    current_year = str(date_now.year)
+    current_month = str(date_now.month).zfill(2)
+    current_day = str(date_now.day).zfill(2)
     
     def setUp(self):
-        date_now = datetime.now()
-        self.current_year = str(date_now.year)
-        self.current_month = str(date_now.month).zfill(2)
-        self.current_day = str(date_now.day).zfill(2)
-
         self.res1 = None
         self.res2 = None
         self.res3 = None
@@ -149,4 +148,14 @@ class SearchByDateTest(TestCase):
                                                                             self.current_month, 
                                                                             self.current_day))
 
+
+class PageNotFoundTest(TestCase):
+    
+    def test_404_page_renders_correct_template(self):
+        # Article that does not exist
+        res = self.client.get('/aaaaaa')
+        self.assertTemplateUsed(res, 'blog_app/404.html')
+
+        # 
+    
 
