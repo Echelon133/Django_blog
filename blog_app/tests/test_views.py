@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.http import HttpRequest
 from django.core.urlresolvers import resolve
+from datetime import datetime
 
 from ..views import (HomepageView, CategoryView, 
                      SearchByYearView, SearchByMonthView, 
@@ -83,19 +84,43 @@ class CategoryTest(TestCase):
         self.assertNotIn(article2, res.context['articles'])
 
     
-class SearchByYearTest(TestCase):
-    base_url = '/{year}/'
-
-    def test_search_year_page_renders_correct_template(self):
-        res = self.client.get(self.base_url.format(year=2017))
-        self.assertTemplateUsed(res, 'blog_app/by_date.html')
-
-    def test_search_year_page_has_correct_form_loaded(self):
-        res = self.client.get(self.base_url.format(year=2017))
-        login_form = res.context['login_form']
-        self.assertIsInstance(login_form, UserLoginForm)
+class SearchByDateTest(TestCase):
     
-    def test_search_year_page_loads_correct_articles(self):
+    def setUp(self):
+        date_now = datetime.now()
+        self.current_year = str(date_now.year)
+        self.current_month = str(date_now.month).zfill(2)
+        self.current_day = str(date_now.day).zfill(2)
+
+        self.res1 = None
+        self.res2 = None
+        self.res3 = None
+        
+    def update_responses(self):
+        self.res1 = self.client.get('/{}'.format(self.current_year))
+        self.res2 = self.client.get('/{}/{}'.format(self.current_year, 
+                                                    self.current_month))
+        self.res3 = self.client.get('/{}/{}/{}'.format(self.current_year,
+                                                       self.current_month,
+                                                       self.current_day))
+
+    def test_search_date_pages_render_correct_templates(self):
+        self.update_responses()
+        self.assertTemplateUsed(self.res1, 'blog_app/by_date.html')
+        self.assertTemplateUsed(self.res2, 'blog_app/by_date.html')
+        self.assertTemplateUsed(self.res3, 'blog_app/by_date.html')
+
+    def test_search_date_pages_have_correct_form_loaded(self):
+        self.update_responses()
+        login_form1 = self.res1.context['login_form']
+        login_form2 = self.res2.context['login_form']
+        login_form3 = self.res3.context['login_form']
+        
+        self.assertIsInstance(login_form1, UserLoginForm)
+        self.assertIsInstance(login_form2, UserLoginForm)
+        self.assertIsInstance(login_form3, UserLoginForm)
+    
+    def test_search_date_pages_load_correct_articles(self):
         category1 = Category.objects.create()
         category1.name = 'category1'
         category1.save()
@@ -104,8 +129,24 @@ class SearchByYearTest(TestCase):
         article1 = Article.objects.create()
         article1.title = 'Test article'
         article1.category = [category1, ]
+        article1.body = 'Test'
+        article1.slug = 'test-article'
         article1.save()
 
-        current_year = article1.last_modified.year
-        res = self.client.get(self.base_url.format(year=current_year))
-        self.assertIn(article1, res.context['articles'])
+        # Get page after adding new article to the database
+        self.update_responses()
+
+        self.assertIn(article1, self.res1.context['articles'])
+        self.assertIn(article1, self.res2.context['articles'])
+        self.assertIn(article1, self.res3.context['articles'])
+    
+    def test_search_date_page_displays_correct_info_texts(self):
+        self.update_responses()
+        self.assertContains(self.res1, 'Searching by date: {}'.format(self.current_year))
+        self.assertContains(self.res2, 'Searching by date: {}/{}'.format(self.current_year, 
+                                                                         self.current_month))
+        self.assertContains(self.res3, 'Searching by date: {}/{}/{}'.format(self.current_year, 
+                                                                            self.current_month, 
+                                                                            self.current_day))
+
+
