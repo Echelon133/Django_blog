@@ -120,7 +120,7 @@ class SearchByDateTest(TestCase):
         self.assertTemplateUsed(self.res2, 'blog_app/by_date.html')
         self.assertTemplateUsed(self.res3, 'blog_app/by_date.html')
 
-    def test_category_page_has_correct_form_loaded(self):
+    def test_search_date_page_has_correct_form_loaded(self):
         self.update_responses()
 
         login_form1 = self.res1.context['login_form']
