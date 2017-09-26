@@ -52,8 +52,4 @@ class CommentForm(forms.ModelForm):
             comment.save()
             return comment
         else:
-<<<<<<< HEAD
             raise forms.ValidationError('Empty body of the comment')
-=======
-            raise ValidationError('Cannot add a new comment')
->>>>>>> new
