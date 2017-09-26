@@ -215,6 +215,35 @@ class ArticleTest(TestCase):
         self.assertIn(self.comment, res.context['comments'])
 
 
+class SignupTest(TestCase):
+    
+    def test_signup_page_renders_correct_template(self):
+        res = self.client.get('/signup')
+        self.assertTemplateUsed(res, 'blog_app/signup.html')
+
+    def test_signup_page_loads_correct_form(self):
+        res = self.client.get('/signup')
+        self.assertIsInstance(res.context['form'], UserSignupForm)
+
+
+class LoginTest(TestCase):
+    
+    def test_login_url_redirects_to_home_page(self):
+        res = self.client.get('/login')
+        res1 = self.client.post('/login')
+
+        self.assertRedirects(res, '/')
+        self.assertRedirects(res1, '/')
+
+
+class LogoutTest(TestCase):
+    
+    def test_logout_url_redirects_to_home_page(self):
+        res = self.client.get('/logout')
+        res1 = self.client.post('/logout')
+
+        self.assertRedirects(res, '/')
+        self.assertRedirects(res1, '/')
 
 
 
