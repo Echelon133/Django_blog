@@ -3,13 +3,7 @@ from django.http import HttpRequest
 from django.core.urlresolvers import resolve
 from datetime import datetime
 
-from ..views import (HomepageView, CategoryView, 
-                     SearchByYearView, SearchByMonthView, 
-                     SearchByDayView, PageNotFoundView, 
-                     ArticleView, SignupView, LoginView, 
-                     LogoutView)
-from ..forms import (UserSignupForm, UserCreationForm, 
-                     CommentForm, UserLoginForm)
+from ..forms import (UserSignupForm, CommentForm, UserLoginForm)
 from ..models import Category, Article, User, Comment
 
 
