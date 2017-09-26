@@ -79,6 +79,7 @@ class SearchByYearView(SearchByBaseView):
 class SearchByMonthView(SearchByBaseView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        
         year = context['year']
         month = context['month']
         page = self.request.GET.get('page')
@@ -178,7 +179,6 @@ class SignupView(View):
 
 
 class LoginView(View):
-    login_form = UserLoginForm
 
     def get(self, request, *args, **kwargs):
         return HttpResponseRedirect('/')
