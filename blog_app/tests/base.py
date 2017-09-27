@@ -5,34 +5,33 @@ from django.utils.text import slugify
 
 class CustomTestCase(TestCase):
     
-    def get_new_category(self, *, name):
-        new_category = Category.objects.create()
-        new_category.name = name
+    def get_new_category(self, *, name=None):
+        new_category = Category.objects.create(name=name)
         return new_category
 
     def get_new_article(self, *, title=None, category=None, article_body=None):
         if title is None:
-            art_title = ''
-            art_slug = ''
+            title = ''
+            slug = ''
         else:
-            art_title = title
-            art_slug = slugify(title)
+            title = title
+            slug = slugify(title)
         
         if category is None:
-            art_category = []
+            category = []
         else:
-            art_category = category
+            category = category
 
         if article_body is None:
-            art_body = ''
+            article_body = ''
         else:
-            art_body = article_body
+            article_body = article_body
 
         new_article = Article.objects.create()
-        new_article.title = art_title
-        new_article.category = art_category
-        new_article.article_body = art_body
-        new_article.slug = art_slug
+        new_article.title = title
+        new_article.category = category
+        new_article.article_body = article_body
+        new_article.slug = slug
         return new_article
 
     def get_new_user(self, *, username, password):
