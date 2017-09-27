@@ -6,7 +6,6 @@ from .base import CustomTestCase
 from ..forms import (UserSignupForm, CommentForm, UserLoginForm)
 
 
-
 class HomepageTest(CustomTestCase):
 
     def test_home_page_renders_correct_template(self):
