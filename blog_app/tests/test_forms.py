@@ -1,4 +1,3 @@
-from django.test import TestCase
 from django.contrib.sessions.backends.db import SessionStore
 from django.test.client import RequestFactory
 from django.http import QueryDict
