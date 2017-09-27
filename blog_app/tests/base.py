@@ -56,8 +56,5 @@ class CustomTestCase(TestCase):
             body = body
 
         new_comment = Comment.objects.create(author=author, article_commented=article_commented, body=body)
-        #new_comment.author = author
-        #new_comment.article_commented = article_commented
-        #new_comment.body = body
         return new_comment
         
