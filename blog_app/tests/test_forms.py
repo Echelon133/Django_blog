@@ -2,7 +2,6 @@ from django.contrib.sessions.backends.db import SessionStore
 from django.test.client import RequestFactory
 from django.http import QueryDict
 from blog_app.forms import UserLoginForm, UserSignupForm, CommentForm
-from blog_app.models import User, Comment, Article
 from django.core.exceptions import ValidationError
 from .base import CustomTestCase
 

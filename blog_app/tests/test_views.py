@@ -1,11 +1,10 @@
-from django.test import TestCase
 from django.http import HttpRequest
 from django.core.urlresolvers import resolve
 from datetime import datetime
 from .base import CustomTestCase
 
 from ..forms import (UserSignupForm, CommentForm, UserLoginForm)
-from ..models import Category, Article, User, Comment
+
 
 
 class HomepageTest(CustomTestCase):

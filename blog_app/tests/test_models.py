@@ -1,4 +1,3 @@
-from blog_app.models import Category, Article, Comment, User
 from django.core.exceptions import ValidationError
 from django.utils.text import slugify
 from .base import CustomTestCase
