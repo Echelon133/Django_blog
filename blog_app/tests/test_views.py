@@ -2,12 +2,13 @@ from django.test import TestCase
 from django.http import HttpRequest
 from django.core.urlresolvers import resolve
 from datetime import datetime
+from .base import CustomTestCase
 
 from ..forms import (UserSignupForm, CommentForm, UserLoginForm)
 from ..models import Category, Article, User, Comment
 
 
-class HomepageTest(TestCase):
+class HomepageTest(CustomTestCase):
 
     def test_home_page_renders_correct_template(self):
         res = self.client.get('/')
@@ -19,8 +20,8 @@ class HomepageTest(TestCase):
         self.assertIsInstance(login_form, UserLoginForm)
 
     def test_home_page_loads_correct_articles(self):
-        article1 = Article.objects.create(title='Test1')
-        article2 = Article.objects.create(title='Test2')
+        article1 = self.get_new_article(title='Test1')
+        article2 = self.get_new_article(title='Test2')
 
         res = self.client.get('/')
         loaded_articles = res.context['articles']
@@ -29,7 +30,7 @@ class HomepageTest(TestCase):
         self.assertIn(article2, loaded_articles)
 
 
-class CategoryTest(TestCase):
+class CategoryTest(CustomTestCase):
     base_url = '/category/'
 
     def test_category_page_renders_correct_template(self):
@@ -42,43 +43,31 @@ class CategoryTest(TestCase):
         self.assertIsInstance(login_form, UserLoginForm)
 
     def test_category_page_loads_correct_articles(self):
-        category1 = Category.objects.create()
-        category1.name = 'test-category'
+        category1 = self.get_new_category(name='test-category')
         category1.save()
 
-        categories = [category1, ]
-        article1 = Article.objects.create()
-        article1.title = 'Test article'
-        article1.category = [category1, ]
+        article1 = self.get_new_article(title='Test article', category=[category1, ])
         article1.save()
 
         res = self.client.get(self.base_url + category1.name)
         self.assertIn(article1, res.context['articles'])
 
     def test_category_page_doesnt_load_incorrect_articles(self):
-        category1 = Category.objects.create()
-        category1.name = 'category1'
+        category1 = self.get_new_category(name='category1')
         category1.save()
-        
-        category2 = Category.objects.create()
-        category2.name = 'category2'
+        category2 = self.get_new_category(name='category2')
         category2.save()
 
-        article1 = Article.objects.create()
-        article1.title = 'Test'
-        article1.category = [category1, ]
+        article1 = self.get_new_article(title='Test', category=[category1, ])
         article1.save()
-        
-        article2 = Article.objects.create()
-        article2.title = 'Test2'
-        article2.category = [category2, ]
+        article2 = self.get_new_article(title='Test2', category=[category2, ])
         article2.save()
 
         res = self.client.get(self.base_url + category1.name)
         self.assertNotIn(article2, res.context['articles'])
 
     
-class SearchByDateTest(TestCase):
+class SearchByDateTest(CustomTestCase):
     date_now = datetime.now()
     current_year = str(date_now.year)
     current_month = str(date_now.month).zfill(2)
@@ -89,15 +78,12 @@ class SearchByDateTest(TestCase):
         self.res2 = None
         self.res3 = None
 
-        self.category = Category.objects.create()
-        self.category.name = 'category'
+        self.category = self.get_new_category(name='category')
         self.category.save()
 
-        self.article = Article.objects.create()
-        self.article.title = 'Test article'
-        self.article.category = [self.category, ]
-        self.article.body = 'Test'
-        self.article.slug = 'test-article'
+        self.article = self.get_new_article(title='Test article', 
+                                            category=[self.category, ],
+                                            article_body='Test')
         self.article.save()
         
     def update_responses(self):
@@ -153,7 +139,7 @@ class SearchByDateTest(TestCase):
                                                                             self.current_day))
 
 
-class PageNotFoundTest(TestCase):
+class PageNotFoundTest(CustomTestCase):
     
     def test_404_page_renders_correct_template(self):
         # Article that does not exist
@@ -161,27 +147,28 @@ class PageNotFoundTest(TestCase):
         self.assertTemplateUsed(res, 'blog_app/404.html')
 
 
-class ArticleTest(TestCase):
+class ArticleTest(CustomTestCase):
     base_url = '/{hash_}/{slug}'
     
     def setUp(self):
-        self.category = Category.objects.create()
-        self.category.name = 'category'
+        # create a category
+        self.category = self.get_new_category(name='category')
         self.category.save()
         
-        self.article = Article.objects.create()
-        self.article.title = 'Test article'
-        self.article.category = [self.category, ]
-        self.article.body = 'Test'
-        self.article.slug = 'test-article'
+        # create an article
+        self.article = self.get_new_article(title='Test article',
+                                            category=[self.category, ],
+                                            article_body='Test')
         self.article.save()
 
-        self.user = User.objects.create_user('test_user1', '', 'test_password123')
+        # create a user
+        self.user = self.get_new_user(username='test_user1', password='test_password123')
         self.user.save()
         
-        self.comment = Comment.objects.create(author=self.user,
-                                              article_commented=self.article,
-                                              body='test')
+        # create a comment
+        self.comment = self.get_new_comment(author=self.user, 
+                                            article_commented=self.article,
+                                            body='test')
         self.comment.save()
     
     def test_article_page_renders_correct_template(self):
@@ -209,7 +196,7 @@ class ArticleTest(TestCase):
         self.assertIn(self.comment, res.context['comments'])
 
 
-class SignupTest(TestCase):
+class SignupTest(CustomTestCase):
     
     def test_signup_page_renders_correct_template(self):
         res = self.client.get('/signup')
@@ -220,7 +207,7 @@ class SignupTest(TestCase):
         self.assertIsInstance(res.context['form'], UserSignupForm)
 
 
-class LoginTest(TestCase):
+class LoginTest(CustomTestCase):
     
     def test_login_url_redirects_to_home_page(self):
         res = self.client.get('/login')
@@ -230,7 +217,7 @@ class LoginTest(TestCase):
         self.assertRedirects(res1, '/')
 
 
-class LogoutTest(TestCase):
+class LogoutTest(CustomTestCase):
     
     def test_logout_url_redirects_to_home_page(self):
         res = self.client.get('/logout')
