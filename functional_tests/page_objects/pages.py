@@ -8,6 +8,8 @@ from locators.locators import PageWithLoginLocators
 from locators.locators import SignupPageLocators
 from locators.locators import ListedArticlesPageLocators
 from locators.locators import SpecificArticlePageLocators
+from locators.locators import ByCategoryPageLocators
+from locators.locators import ByDatePageLocators
 
 
 class BasePageObject:
@@ -154,11 +156,17 @@ class SpecificArticlePageObject(BasePageObjectWithLogin):
 
 
 class ByCategoryPageObject(ListedArticlesPageObject):
-    pass
+    
+    def get_info_text(self):
+        info = self.find_element(*ByCategoryPageLocators.category_text)
+        return info.text
 
 
 class ByDatePageObject(ListedArticlesPageObject):
-    pass
+    
+    def get_info_text(self):
+        info = self.find_element(*ByDatePageLocators.date_text)
+        return info.text
 
 
 class NotFoundPageObject(BasePageObjectWithLogin):
