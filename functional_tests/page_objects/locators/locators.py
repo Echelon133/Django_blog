@@ -22,6 +22,7 @@ class SignupPageLocators(BasePageLocators):
     password1_field = (By.XPATH, '//*[@id="id_password1"]')
     password2_field = (By.XPATH, '//*[@id="id_password2"]')
     signup_button = (By.XPATH, '//form/div[@class=text-center]/button')
+    alert_text = (By.CLASS_NAME, 'alert')
 
 
 class ListedArticlesPageLocators(PageWithLoginLocators):
