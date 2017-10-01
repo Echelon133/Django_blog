@@ -39,11 +39,11 @@ class HomePageLocators(ListedArticlesPageLocators):
 
 
 class ByDatePageLocators(ListedArticlesPageLocators):
-    date_text = (By.CLASS_NAME, 'results')
+    date_text = (By.CLASS_NAME, 'searching-by')
 
 
 class ByCategoryPageLocators(ListedArticlesPageLocators):
-    category_text = (By.CLASS_NAME, 'results')
+    category_text = (By.CLASS_NAME, 'searching-by')
 
 
 class SpecificArticlePageLocators(PageWithLoginLocators):
