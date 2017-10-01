@@ -6,6 +6,7 @@ from contextlib import contextmanager
 
 from locators.locators import PageWithLoginLocators
 from locators.locators import SignupPageLocators
+from locators.locators import ListedArticlesPageLocators
 
 
 class BasePageObject:
@@ -16,6 +17,9 @@ class BasePageObject:
     def find_element(self, *locator):
         return self.driver.find_element(*locator)
 
+    def find_elements(self, *locator):
+        return self.driver.find_elements(*locator)
+
     def get_page_title(self):
         return self.driver.title
 
@@ -25,7 +29,7 @@ class BasePageObject:
     def visit_home_page(self):
         homepage_link = self.find_element(*PageWithLoginLocators.homepage_link)
         homepage_link.click()
-        # return HomePageObject
+        return HomePageObject
 
     def get_description_text(self):
         description = self.find_element(*PageWithLoginLocators.description)
@@ -58,8 +62,39 @@ class BasePageObjectWithLogin(BasePageObject):
 
     def visit_signup_page(self):
         signup_link = self.find_element(*PageWithLoginLocators.signup_link)
-        # return SignupPageObject(self.driver)
+        return SignupPageObject(self.driver)
 
+
+class ListedArticlesPageObject(BasePageObjectWithLogin):
+    
+    def get_titles_on_page(self):
+        titles = self.find_elements(*ListedArticlesPageLocators.article_titles)
+        all_titles = [title.text for title in titles]
+        return all_titles
+
+    def visit_article_with_title(self, title):
+        articles = self.find_elements(*ListedArticlesPageLocators.article_links)
+        for article in articles:
+            if article.text == title:
+                article.click()
+                return SingleArticlePageObject(self.driver)
+            else:
+                return self
+
+    def visit_next_page(self):
+        paginator_links = self.find_elements(*ListedArticlesPageLocators.paginator_links)
+        for link in paginator_links:
+            if link.text == 'Next Page':
+                link.click()
+                return self
+
+    def visit_previous_page(self):
+        paginator_links = self.find_elements(*ListedArticlesPageLocators.paginator_links)
+        for link in paginator_links:
+            if link.text == 'Previous Page':
+                link.click()
+                return self
+    
 
 class SignupPageObject(BasePageObject):
     
@@ -86,3 +121,23 @@ class SignupPageObject(BasePageObject):
             return True
         else:
             return False
+
+
+class HomePageObject(ListedArticlesPageObject):
+    pass
+
+
+class SingleArticlePageObject(BasePageObjectWithLogin):
+    pass
+
+
+class ByCategoryPageObject(ListedArticlesPageObject):
+    pass
+
+
+class ByDatePageObject(ListedArticlesPageObject):
+    pass
+
+
+class NotFoundPageObject(BasePageObjectWithLogin):
+    pass
