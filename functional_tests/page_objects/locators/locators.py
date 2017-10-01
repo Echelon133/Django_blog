@@ -51,7 +51,7 @@ class SpecificArticlePageLocators(PageWithLoginLocators):
     date = (By.XPATH, '//ul[@class="outer-list"]/li[1]')
     categories = (By.XPATH, '//ul[@class="outer-list"]/li[2]')
     body = (By.XPATH, '//*[@id="single-article"]/section')
-    comment = (By.CLASS_NAME, 'card')
+    comment_body = (By.CLASS_NAME, 'card-blockquote')
     comment_field = (By.XPATH, '//*[@id="id_body"]')
     send_button = (By.XPATH, '//div[@class="form-group"][2]/button')
 
