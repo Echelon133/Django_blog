@@ -5,6 +5,7 @@ from selenium.webdriver.common.keys import Keys
 from contextlib import contextmanager
 
 from locators.locators import PageWithLoginLocators
+from locators.locators import SignupPageLocators
 
 
 class BasePageObject:
@@ -58,5 +59,30 @@ class BasePageObjectWithLogin(BasePageObject):
     def visit_signup_page(self):
         signup_link = self.find_element(*PageWithLoginLocators.signup_link)
         # return SignupPageObject(self.driver)
-        
-        
+
+
+class SignupPageObject(BasePageObject):
+    
+    def set_username(self, username):
+        username_field = self.find_element(*SignupPageLocators.username_field)
+        username_field.send_keys(username)
+
+    def set_password1(self, password1):
+        password1_field = self.find_element(*SignupPageLocators.password1_field)
+        password1_field.send_keys(password1)
+
+    def set_password2(self, password2):
+        password2_field = self.find_element(*SignupPageLocators.password2_field)
+        password2_field.send_keys(password2)
+
+    def sign_up_and_return_status(self):
+        signup_button = self.find_element(*SignupPageLocators.signup_button)
+        signup_button.click()
+        # clicking on this button reloads the page
+        self.driver.implicitly_wait(5)
+        alert = self.find_element(*SignupPageLocators.alert_text)
+        alert_text = alert.text
+        if alert_text == 'User creation successful. You can log in now.':
+            return True
+        else:
+            return False
