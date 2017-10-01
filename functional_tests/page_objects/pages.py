@@ -7,6 +7,7 @@ from contextlib import contextmanager
 from locators.locators import PageWithLoginLocators
 from locators.locators import SignupPageLocators
 from locators.locators import ListedArticlesPageLocators
+from locators.locators import SpecificArticlePageLocators
 
 
 class BasePageObject:
@@ -77,7 +78,7 @@ class ListedArticlesPageObject(BasePageObjectWithLogin):
         for article in articles:
             if article.text == title:
                 article.click()
-                return SingleArticlePageObject(self.driver)
+                return SpecificArticlePageObject(self.driver)
             else:
                 return self
 
@@ -127,8 +128,29 @@ class HomePageObject(ListedArticlesPageObject):
     pass
 
 
-class SingleArticlePageObject(BasePageObjectWithLogin):
-    pass
+class SpecificArticlePageObject(BasePageObjectWithLogin):
+
+    def get_categories(self):
+        categories = self.find_elements(*SpecificArticlePageLocators.categories)
+        all_categories = [category.text for category in categories]
+        return all_categories
+
+    def get_body(self):
+        body = self.find_element(*SpecificArticlePageLocators.body)
+        return body.text
+
+    def get_comments_as_text(self):
+        comments = self.find_elements(*SpecificArticlePageLocators.comment_body)
+        all_comments = [comment.text for comment in comments]
+        return all_comments
+
+    def set_comment_body(self, body):
+        comment_body = self.find_element(*SpecificArticlePageLocators.comment_field)
+        comment_body.send_keys(body)
+    
+    def send_comment(self):
+        send_button = self.find_element(*SpecificArticlePageLocators.send_button)
+        send_button.click()
 
 
 class ByCategoryPageObject(ListedArticlesPageObject):
