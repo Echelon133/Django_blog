@@ -41,8 +41,9 @@ class BasePageObjectWithLogin(BasePageObject):
         logout_link.click()
 
     def get_logged_username(self):
-        logged_as_text = self.find_element(*PageWithLoginLocators.logged_as_text)
-        return logged_as_text.text
-
+        logged_as = self.find_element(*PageWithLoginLocators.logged_as_text)
+        # 'Logged in as XYZ'. Slicing from 13 letter gives username
+        username = logged_as.text[13:]
+        return username
         
         
