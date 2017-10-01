@@ -21,6 +21,15 @@ class BasePageObject:
     def get_current_url(self):
         return self.driver.current_url
 
+    def visit_home_page(self):
+        homepage_link = self.find_element(*PageWithLoginLocators.homepage_link)
+        homepage_link.click()
+        # return HomePageObject
+
+    def get_description_text(self):
+        description = self.find_element(*PageWithLoginLocators.description)
+        return description.text
+
 
 class BasePageObjectWithLogin(BasePageObject):
 
@@ -45,5 +54,9 @@ class BasePageObjectWithLogin(BasePageObject):
         # 'Logged in as XYZ'. Slicing from 13 letter gives username
         username = logged_as.text[13:]
         return username
+
+    def visit_signup_page(self):
+        signup_link = self.find_element(*PageWithLoginLocators.signup_link)
+        # return SignupPageObject(self.driver)
         
         
