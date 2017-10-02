@@ -1,13 +1,13 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
-from locators.locators import PageWithLoginLocators
-from locators.locators import SignupPageLocators
-from locators.locators import ListedArticlesPageLocators
-from locators.locators import SpecificArticlePageLocators
-from locators.locators import ByCategoryPageLocators
-from locators.locators import ByDatePageLocators
-from locators.locators import NotFoundPageLocators
+from locators.locators import (PageWithLoginLocators,
+                               SignupPageLocators,
+                               ListedArticlesPageLocators,
+                               SpecificArticlePageLocators,
+                               ByCategoryPageLocators,
+                               ByDatePageLocators,
+                               NotFoundPageLocators)
 
 
 class BasePageObject:
