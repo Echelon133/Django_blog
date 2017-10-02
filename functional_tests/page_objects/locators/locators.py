@@ -56,3 +56,7 @@ class SpecificArticlePageLocators(PageWithLoginLocators):
     send_button = (By.XPATH, '//div[@class="form-group"][2]/button')
 
 
+class NotFoundPageLocators(PageWithLoginLocators):
+    error_code = (By.CLASS_NAME, 'error-code')
+    error_text = (By.CLASS_NAME, 'error-text')
+
