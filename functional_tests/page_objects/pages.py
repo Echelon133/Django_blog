@@ -1,8 +1,5 @@
 from selenium import webdriver
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.keys import Keys
-from contextlib import contextmanager
 
 from locators.locators import PageWithLoginLocators
 from locators.locators import SignupPageLocators
@@ -10,6 +7,7 @@ from locators.locators import ListedArticlesPageLocators
 from locators.locators import SpecificArticlePageLocators
 from locators.locators import ByCategoryPageLocators
 from locators.locators import ByDatePageLocators
+from locators.locators import NotFoundPageLocators
 
 
 class BasePageObject:
@@ -170,4 +168,11 @@ class ByDatePageObject(ListedArticlesPageObject):
 
 
 class NotFoundPageObject(BasePageObjectWithLogin):
-    pass
+    
+    def get_error_code(self):
+        error_code = self.find_element(*NotFoundPageLocators.error_code)
+        return error_code.text
+
+    def get_error_text(self):
+        error_text = self.find_element(*NotFoundPageLocators.error_text)
+        return error_text.text
