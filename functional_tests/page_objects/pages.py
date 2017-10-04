@@ -1,13 +1,13 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
-from locators.locators import (PageWithLoginLocators,
-                               SignupPageLocators,
-                               ListedArticlesPageLocators,
-                               SpecificArticlePageLocators,
-                               ByCategoryPageLocators,
-                               ByDatePageLocators,
-                               NotFoundPageLocators)
+from .locators.locators import (PageWithLoginLocators,
+                                SignupPageLocators,
+                                ListedArticlesPageLocators,
+                                SpecificArticlePageLocators,
+                                ByCategoryPageLocators,
+                                ByDatePageLocators,
+                                NotFoundPageLocators)
 
 
 class BasePageObject:
@@ -63,6 +63,7 @@ class BasePageObjectWithLogin(BasePageObject):
 
     def visit_signup_page(self):
         signup_link = self.find_element(*PageWithLoginLocators.signup_link)
+        signup_link.click()
         return SignupPageObject(self.driver)
 
 
