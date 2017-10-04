@@ -8,8 +8,8 @@ class BasePageLocators:
 
 class PageWithLoginLocators(BasePageLocators):
     # elements below are available when user is not logged in
-    username_field = (By.XPATH, '//*[@id="id_username"]')
-    password_field = (By.XPATH, '//*[@id="id_password"]')
+    username_field = (By.ID, 'id_username')
+    password_field = (By.ID, 'id_password')
     login_button = (By.XPATH, '//button[@class="btn"][1]')
     signup_link = (By.XPATH, '//li[@class="nav-item"]/a')
     # elements available when logged in
@@ -18,9 +18,9 @@ class PageWithLoginLocators(BasePageLocators):
 
 
 class SignupPageLocators(BasePageLocators):
-    username_field = (By.XPATH, '//*[@id="id_username"]')
-    password1_field = (By.XPATH, '//*[@id="id_password1"]')
-    password2_field = (By.XPATH, '//*[@id="id_password2"]')
+    username_field = (By.ID, 'id_username')
+    password1_field = (By.ID, 'id_password1')
+    password2_field = (By.ID, 'id_password2')
     signup_button = (By.XPATH, '//form/div[@class=text-center]/button')
     alert_text = (By.CLASS_NAME, 'alert')
 
