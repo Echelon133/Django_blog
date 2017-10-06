@@ -30,7 +30,7 @@ class BasePageObject:
     def visit_home_page(self):
         homepage_link = self.find_element(*PageWithLoginLocators.homepage_link)
         homepage_link.click()
-        return HomePageObject
+        return HomePageObject(self.driver)
 
     def get_description_text(self):
         description = self.find_element(*PageWithLoginLocators.description)
