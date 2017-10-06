@@ -112,13 +112,16 @@ class SignupPageObject(BasePageObject):
         password2_field = self.find_element(*SignupPageLocators.password2_field)
         password2_field.send_keys(password2)
 
+    def get_alert_text(self):
+        alert = self.find_element(*SignupPageLocators.alert_text)
+        return alert.text
+
     def sign_up_and_return_status(self):
         signup_button = self.find_element(*SignupPageLocators.signup_button)
         signup_button.click()
         # clicking on this button reloads the page
         self.driver.implicitly_wait(5)
-        alert = self.find_element(*SignupPageLocators.alert_text)
-        alert_text = alert.text
+        alert_text = self.get_alert_text()
         if alert_text == 'User creation successful. You can log in now.':
             return True
         else:
