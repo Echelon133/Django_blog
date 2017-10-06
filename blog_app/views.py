@@ -173,8 +173,11 @@ class SignupView(View):
         if form.is_valid():
             form.save()
             return render(request, self.template_name)
+        elif request.POST['password1'] != request.POST['password2']:
+            return render(request, self.template_name, {'error_text':'Passwords do not match',
+                                                        'form': UserSignupForm()})
         else:
-            return render(request, self.template_name, {'user_exists': True,
+            return render(request, self.template_name, {'error_text':'User already exists. Pick another name',
                                                         'form': UserSignupForm()})
 
 
