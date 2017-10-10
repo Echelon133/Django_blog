@@ -8,7 +8,7 @@ from .models import Comment
 
 
 class UserSignupForm(UserCreationForm):
-    username = forms.CharField(required=True)
+    username = forms.CharField(required=True, min_length=4, strip=True)
 
     class Meta:
         model = User
@@ -22,7 +22,6 @@ class UserSignupForm(UserCreationForm):
         if not user and commit:
             # if user with specified username doesn't exist 
             new_user.save()
-        return new_user
         
 
 class UserLoginForm(AuthenticationForm):
@@ -52,4 +51,4 @@ class CommentForm(forms.ModelForm):
             comment.save()
             return comment
         else:
-            raise forms.ValidationError('Empty body of the comment')
+            raise ValidationError('Empty body of the comment')
