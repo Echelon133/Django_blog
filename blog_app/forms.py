@@ -22,6 +22,7 @@ class UserSignupForm(UserCreationForm):
         if not user and commit:
             # if user with specified username doesn't exist 
             new_user.save()
+        return new_user
         
 
 class UserLoginForm(AuthenticationForm):
