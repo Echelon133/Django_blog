@@ -66,6 +66,9 @@ class SignupFunctionalitiesTest(FunctionalTest):
         comments = article_page.get_comments_as_text()
         self.assertIn(new_comment_text, comments)
 
+        # User logs out
+        article_page.logout()
+        
     def test_signup_with_different_passwords(self):
         # User visits signup page
         self.driver.get('http://localhost:8000/signup')
@@ -83,3 +86,33 @@ class SignupFunctionalitiesTest(FunctionalTest):
         self.assertFalse(status)
         alert_msg = signup_page.get_alert_text()
         self.assertEqual(alert_msg, 'The two password fields didn\'t match.')
+
+
+class PaginationFunctionalityTest(FunctionalTest):
+
+    def test_articles_do_not_move_between_pages(self):
+        self.driver.get('http://localhost:8000')
+        home_page = HomePageObject(self.driver)
+
+        # Get all titles on page 1
+        page_one = home_page.get_titles_on_page()
+
+        # Go to the next page
+        home_page.visit_next_page()
+
+        # Get all titles on page 2
+        page_two = home_page.get_titles_on_page()
+
+        # Go back to the page 1
+        home_page.visit_previous_page()
+
+        # Compare page 1 articles
+        page_one_check = home_page.get_titles_on_page()
+        self.assertEqual(page_one, page_one_check)
+
+        # Go to the next page
+        home_page.visit_next_page()
+
+        # Compare page 2 articles
+        page_two_check = home_page.get_titles_on_page()
+        self.assertEqual(page_two, page_two_check)
