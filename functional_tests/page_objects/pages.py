@@ -50,10 +50,12 @@ class BasePageObjectWithLogin(BasePageObject):
     def login(self):
         login_btn = self.find_element(*PageWithLoginLocators.login_button)
         login_btn.click()
-
+        return HomePageObject(self.driver)
+    
     def logout(self):
         logout_link = self.find_element(*PageWithLoginLocators.logout_link)
         logout_link.click()
+        return HomePageObject(self.driver)
 
     def get_logged_username(self):
         logged_as = self.find_element(*PageWithLoginLocators.logged_as_text)
