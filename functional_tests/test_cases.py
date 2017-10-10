@@ -82,4 +82,4 @@ class SignupFunctionalitiesTest(FunctionalTest):
         # User gets correct message
         self.assertFalse(status)
         alert_msg = signup_page.get_alert_text()
-        self.assertEqual(alert_msg, 'Passwords do not match')
+        self.assertEqual(alert_msg, 'The two password fields didn\'t match.')
