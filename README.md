@@ -15,7 +15,7 @@ Blog app written using Django framework. Supports custom users, comments, managi
 ### Single Article View
 ![SingleArticle](https://github.com/Echelon133/Django_blog/blob/master/screens/2SingleArticle.png)
 
-### Sorting by Category
+### Searching by Category
 ![ByCategory](https://github.com/Echelon133/Django_blog/blob/master/screens/3ByCategory.png)
 
 ### Comments
